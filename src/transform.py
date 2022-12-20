@@ -7,16 +7,16 @@ from tqdm import tqdm
 
 params = yaml.safe_load(open("params.yaml"))["transform"]
 
-if len(sys.argv) != 2:
+if len(sys.argv) != 3:
     sys.stderr.write("Arguments error. Usage:\n")
-    sys.stderr.write("\tpython prepare.py dataset-folders\n")
+    sys.stderr.write("\tpython prepare.py data-folder output-folder\n")
     sys.exit(1)
 
 # Test data set split ratio
 shape = params["shape"]
 
 input_folder = os.path.join(sys.argv[1], "raw")
-output_folder = os.path.join(sys.argv[1], "transformed")
+output_folder = os.path.join(sys.argv[2])
 
 if not os.path.exists(output_folder):
     os.makedirs(output_folder)

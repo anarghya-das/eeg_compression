@@ -52,15 +52,15 @@ def convert_labels(labels):
 
 params = yaml.safe_load(open("params.yaml"))["featurize"]
 
-if len(sys.argv) != 2:
+if len(sys.argv) != 4:
     sys.stderr.write("Arguments error. Usage:\n")
     sys.stderr.write(
-        "\tpython featurization.py dataset-dir-path\n")
+        "\tpython featurization.py transformed-path labels-path output-path\n")
     sys.exit(1)
 
-input_folder = os.path.join(sys.argv[1], "transformed")
-labels_folder = os.path.join(sys.argv[1], "labels")
-output_folder = os.path.join(sys.argv[1], "features")
+input_folder = os.path.join(sys.argv[1])
+labels_folder = os.path.join(sys.argv[2])
+output_folder = os.path.join(sys.argv[3])
 
 if not os.path.exists(output_folder):
     os.makedirs(output_folder)
@@ -81,4 +81,3 @@ for i, f in enumerate(tqdm(os.listdir(input_folder))):
 
 model_data = np.vstack(model_data)
 np.save(os.path.join(output_folder, "wavelet_features"), model_data)
-

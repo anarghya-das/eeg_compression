@@ -1,0 +1,56 @@
+stages:
+  transform:
+    cmd: python src/transform.py data/seed-vig intermediate/transformed
+    deps:
+      - data/seed-vig/raw
+      - src/transform.py
+    params:
+      - transform.shape
+    outs:
+      - intermediate/transformed
+  featurize:
+    cmd: python src/featurization.py intermediate/transformed data/seed-vig/labels intermediate/features
+    deps:
+      - intermediate/transformed
+      - data/seed-vig/labels
+    params:
+      - featurize.level
+      - featurize.wavelet
+      - featurize.threshold
+      - featurize.coefficient_number
+    outs:
+      - intermediate/features
+  train:
+    cmd: python src/train.py intermediate/features
+    deps:
+      - intermediate/features
+      - src/train.py
+    params:
+      - train.state
+      - train.split
+      - train.svm_kernel
+      - train.svm_C
+      - train.svm_degree
+    outs:
+      - model.pkl
+  evaluate:
+    cmd: python src/evaluate.py model.pkl intermediate/features
+    deps:
+      - intermediate/features
+      - model.pkl
+      - src/evaluate.py
+    params:
+      - train.state
+      - train.split
+    outs:
+      - evaluation/plots/metrics:
+          cache: false
+    metrics:
+      - evaluation/metrics.json:
+          cache: false
+    plots:
+      - evaluation/plots/sklearn/confusion_matrix.json:
+          cache: false
+          template: confusion
+          x: actual
+          y: predicted

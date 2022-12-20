@@ -1,4 +1,6 @@
 [core]
     remote = storage
+[cache]
+    type = "hardlink,symlink"
 ['remote "storage"']
     url = gdrive://1tAu-p556ppxX1MgAM7mM8nejPkuF9vjW

@@ -17,7 +17,7 @@ if len(sys.argv) != 3:
     sys.exit(1)
 
 model_file = sys.argv[1]
-features_path = os.path.join(sys.argv[2], "features", "wavelet_features.npy")
+features_path = os.path.join(sys.argv[2], "wavelet_features.npy")
 features = np.load(features_path)
 train_size = params['split']
 state = params['state']

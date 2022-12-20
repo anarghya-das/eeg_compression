@@ -14,7 +14,7 @@ if len(sys.argv) != 2:
         "\tpython featurization.py dataset-dir-path\n")
     sys.exit(1)
 
-features_path = os.path.join(sys.argv[1], "features", "wavelet_features.npy")
+features_path = os.path.join(sys.argv[1], "wavelet_features.npy")
 train_size = params['split']
 state = params['state']
 svm_kernel = params['svm_kernel']
