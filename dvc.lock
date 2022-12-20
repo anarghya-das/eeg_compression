@@ -1,0 +1,95 @@
+schema: '2.0'
+stages:
+  transform:
+    cmd: python src/transform.py data/seed-vig intermediate/transformed
+    deps:
+    - path: data/seed-vig/raw
+      md5: 8292e1bdcd1e89b15793d3b95a608b4a.dir
+      size: 2771722689
+      nfiles: 23
+    - path: src/transform.py
+      md5: 2b82bb86db533f286ea78b81b5dbdb20
+      size: 853
+    params:
+      params.yaml:
+        transform.shape:
+        - 17
+        - 1600
+        - 885
+    outs:
+    - path: intermediate/transformed
+      md5: 2344cefac92ca6433cb8243b0ca0bcae.dir
+      size: 4429250944
+      nfiles: 23
+  featurize:
+    cmd: python src/featurization.py intermediate/transformed data/seed-vig/labels
+      intermediate/features
+    deps:
+    - path: data/seed-vig/labels
+      md5: ef84f862037e4dbee10d04e559a29700.dir
+      size: 146941
+      nfiles: 23
+    - path: intermediate/transformed
+      md5: 2344cefac92ca6433cb8243b0ca0bcae.dir
+      size: 4429250944
+      nfiles: 23
+    params:
+      params.yaml:
+        featurize.coefficient_number: 0
+        featurize.level: 3
+        featurize.threshold: 0
+        featurize.wavelet: rbio1.1
+    outs:
+    - path: intermediate/features
+      md5: ff6e14a1c22f52b1358ccd6621f6ebd9.dir
+      size: 97866968
+      nfiles: 1
+  train:
+    cmd: python src/train.py intermediate/features
+    deps:
+    - path: intermediate/features
+      md5: ff6e14a1c22f52b1358ccd6621f6ebd9.dir
+      size: 97866968
+      nfiles: 1
+    - path: src/train.py
+      md5: f43ebc80d498254e289010bebf03087a
+      size: 984
+    params:
+      params.yaml:
+        train.split: 0.8
+        train.state: 123
+        train.svm_C: 1
+        train.svm_degree: 3
+        train.svm_kernel: poly
+    outs:
+    - path: model.pkl
+      md5: c173110a806fdfa8fd79d126ec93f18a
+      size: 64830171
+  evaluate:
+    cmd: python src/evaluate.py model.pkl intermediate/features
+    deps:
+    - path: intermediate/features
+      md5: ff6e14a1c22f52b1358ccd6621f6ebd9.dir
+      size: 97866968
+      nfiles: 1
+    - path: model.pkl
+      md5: c173110a806fdfa8fd79d126ec93f18a
+      size: 64830171
+    - path: src/evaluate.py
+      md5: b37f4ce44060da3c21b7b2805dd056c1
+      size: 1589
+    params:
+      params.yaml:
+        train.split: 0.8
+        train.state: 123
+    outs:
+    - path: evaluation/metrics.json
+      md5: e7e5e2bd89361b19b17fec4a49bfaa10
+      size: 71
+    - path: evaluation/plots/metrics
+      md5: 57735929635a7b6784138f8abe0417e9.dir
+      size: 64
+      nfiles: 2
+    - path: evaluation/plots/sklearn/confusion_matrix.json
+      md5: 1586c76f2f60305137199e3162a20bb6
+      size: 280902
