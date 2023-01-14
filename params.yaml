@@ -8,9 +8,6 @@ featurize:
 train:
   state: 123
   split: 0.8
-  svm_kernel: "poly"
-  svm_C: 1
-  svm_degree: 3
 evaluate:
   state: 123
   split: 0.8

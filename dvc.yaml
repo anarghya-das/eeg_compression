@@ -28,16 +28,13 @@ stages:
     params:
       - train.state
       - train.split
-      - train.svm_kernel
-      - train.svm_C
-      - train.svm_degree
     outs:
-      - model.pkl
+      - mdl.h5
   evaluate:
-    cmd: python src/evaluate.py model.pkl intermediate/features
+    cmd: python src/evaluate.py mdl.h5 intermediate/features
     deps:
       - intermediate/features
-      - model.pkl
+      - mdl.h5
       - src/evaluate.py
     params:
       - train.state

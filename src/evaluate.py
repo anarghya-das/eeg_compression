@@ -1,11 +1,11 @@
 import os
-import pickle
 import sys
 import numpy as np
 from sklearn.model_selection import train_test_split
 import yaml
 from sklearn import metrics
 from dvclive import Live
+from keras.models import load_model
 
 params = yaml.safe_load(open("params.yaml"))["evaluate"]
 
@@ -24,10 +24,11 @@ test_size = 1 - train_size
 _, X_test, _, Y_test = train_test_split(
     features[:, :-1], features[:, -1], train_size=train_size, test_size=test_size, random_state=state)
 
-with open(model_file, "rb") as fd:
-    model = pickle.load(fd)
+model = load_model('mdl.h5')
 
 Y_pred = model.predict(X_test)
+Y_pred = np.argmax(Y_pred, 1)
+
 accuracy = metrics.accuracy_score(Y_test, Y_pred)
 f1 = metrics.f1_score(Y_test, Y_pred, average='weighted')
 
