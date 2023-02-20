@@ -76,8 +76,8 @@ stages:
       md5: c173110a806fdfa8fd79d126ec93f18a
       size: 64830171
     - path: src/evaluate.py
-      md5: b37f4ce44060da3c21b7b2805dd056c1
-      size: 1589
+      md5: 8be1cd9de9b2c47d989d4060bc6cea12
+      size: 1142
     params:
       params.yaml:
         train.split: 0.8

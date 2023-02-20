@@ -35,6 +35,8 @@ def create_features(raw_data, level, threshold, wavelet, num):
         features_arr.append(transformed_array.flatten())
 
     features_arr = np.array(features_arr)
+    features_arr = (features_arr - features_arr.min()) / \
+        (features_arr.max() - features_arr.min())
     return features_arr
 
 
