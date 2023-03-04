@@ -1,14 +1,17 @@
 transform:
-  shape: [17, 1600, 885]
+  shape:
+    - 17
+    - 1600
+    - 885
 featurize:
   level: 3
-  wavelet: "rbio1.1"
-  threshold: 0
-  coefficient_number: 0
+  wavelet: rbio1.1
+  threshold: 0.183906
+  coefficient_number: 3
 train:
   state: 123
   split: 0.8
-  svm_kernel: "poly"
+  svm_kernel: poly
   svm_C: 1
   svm_degree: 3
 evaluate:

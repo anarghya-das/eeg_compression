@@ -28,6 +28,5 @@ X_train, _, Y_train, _ = train_test_split(
 
 svm = svm.SVC(kernel=svm_kernel, C=svm_C,
               degree=svm_degree, random_state=state)
-
 svm.fit(X_train, Y_train)
 pickle.dump(svm, open('model.pkl', 'wb'))
