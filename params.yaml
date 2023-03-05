@@ -1,18 +1,21 @@
 transform:
   datasets:
     seed-vig:
-      shape: [17, 1600, 885]
+      shape:
+        - 17
+        - 1600
+        - 885
     mi:
       shape: []
 featurize:
   level: 3
-  wavelet: "haar"
+  wavelet: haar
   threshold: 2.247924
   coefficient_number: 0
 train:
   state: 123
   split: 0.75
-  svm_kernel: "poly"
+  svm_kernel: poly
   svm_C: 1
   svm_degree: 3
 evaluate:
