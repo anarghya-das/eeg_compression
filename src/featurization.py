@@ -60,6 +60,7 @@ if len(sys.argv) != 4:
         "\tpython featurization.py transformed-path labels-path output-path\n")
     sys.exit(1)
 
+data_name = sys.argv[1].split("/")[1]
 input_folder = os.path.join(sys.argv[1])
 labels_folder = os.path.join(sys.argv[2])
 output_folder = os.path.join(sys.argv[3])
@@ -68,18 +69,33 @@ if not os.path.exists(output_folder):
     os.makedirs(output_folder)
 
 all_labels = []
-for l in os.listdir(labels_folder):
-    labels = scipy.io.loadmat(os.path.join(labels_folder, l))["perclos"]
-    labels = convert_labels(labels)
-    all_labels.append(labels)
+if data_name == "mi":
+    for l in os.listdir(labels_folder):
+        y_train = scipy.io.loadmat(os.path.join(labels_folder, l))["y_train"]
+        y_test = scipy.io.loadmat(os.path.join(labels_folder, l))["y_test"]
+        all_labels = np.concatenate((y_train, y_test), axis=1).reshape(-1)
+
+else:
+    for l in os.listdir(labels_folder):
+        labels = scipy.io.loadmat(os.path.join(labels_folder, l))["perclos"]
+        labels = convert_labels(labels)
+        all_labels.append(labels)
 
 model_data = []
-for i, f in enumerate(tqdm(os.listdir(input_folder))):
-    data = np.load(os.path.join(input_folder, f))
-    features = create_features(data, params["level"],
-                               params["threshold"], params["wavelet"], params["coefficient_number"])
-    combined = np.column_stack((features, all_labels[i]))
-    model_data.append(combined)
+if data_name == "mi":
+    for f in tqdm(os.listdir(input_folder)):
+        data = np.load(os.path.join(input_folder, f))
+        features = create_features(data, params["level"],
+                                   params["threshold"], params["wavelet"], params["coefficient_number"])
+        combined = np.column_stack((features, all_labels))
+        model_data.append(combined)
+else:
+    for i, f in enumerate(tqdm(os.listdir(input_folder))):
+        data = np.load(os.path.join(input_folder, f))
+        features = create_features(data, params["level"],
+                                   params["threshold"], params["wavelet"], params["coefficient_number"])
+        combined = np.column_stack((features, all_labels[i]))
+        model_data.append(combined)
 
 model_data = np.vstack(model_data)
 np.save(os.path.join(output_folder, "wavelet_features"), model_data)

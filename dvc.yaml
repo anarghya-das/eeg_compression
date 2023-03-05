@@ -1,29 +1,32 @@
+vars:
+  - dataset: mi
+
 stages:
   transform:
-    cmd: python src/transform.py data/seed-vig intermediate/transformed
+    cmd: python src/transform.py data/${dataset} intermediate/${dataset}/transformed
     deps:
-      - data/seed-vig/raw
+      - data/${dataset}/raw
       - src/transform.py
     params:
-      - transform.shape
+      - transform.datasets.${dataset}.shape
     outs:
-      - intermediate/transformed
+      - intermediate/${dataset}/transformed
   featurize:
-    cmd: python src/featurization.py intermediate/transformed data/seed-vig/labels intermediate/features
+    cmd: python src/featurization.py intermediate/${dataset}/transformed data/${dataset}/labels intermediate/${dataset}/features
     deps:
-      - intermediate/transformed
-      - data/seed-vig/labels
+      - intermediate/${dataset}/transformed
+      - data/${dataset}/labels
     params:
       - featurize.level
       - featurize.wavelet
       - featurize.threshold
       - featurize.coefficient_number
     outs:
-      - intermediate/features
+      - intermediate/${dataset}/features
   train:
-    cmd: python src/train.py intermediate/features
+    cmd: python src/train.py intermediate/${dataset}/features
     deps:
-      - intermediate/features
+      - intermediate/${dataset}/features
       - src/train.py
     params:
       - train.state
@@ -34,9 +37,9 @@ stages:
     outs:
       - model.pkl
   evaluate:
-    cmd: python src/evaluate.py model.pkl intermediate/features
+    cmd: python src/evaluate.py model.pkl intermediate/${dataset}/features
     deps:
-      - intermediate/features
+      - intermediate/${dataset}/features
       - model.pkl
       - src/evaluate.py
     params:
