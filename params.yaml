@@ -11,7 +11,7 @@ featurize:
   level: 3
   wavelet: haar
   threshold: 2.247924
-  coefficient_number: 0
+  coefficient_number: -1
 train:
   state: 123
   split: 0.75
